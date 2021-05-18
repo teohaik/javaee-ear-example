@@ -33,6 +33,8 @@ in the kitchensink-ear-ejb/resources folder you can find an import.sql file with
 
 The application will be running at the following URL: <http://localhost:port/kitchensink-ear/>.
 
+The 2 web apps are available at : <http://localhost:port/kitchensink-ear-web/index.jsf/>  and   <http://localhost:port/kitchensink-ear-web2/index.jsf/>
+
 1. Enter a name, email address, and Phone nubmer in the input field and click the _Register_ button.
 2. If the data entered is valid, the new member will be registered and added to the _Members_ display list.
 3. If the data is not valid, you must fix the validation errors and try again.
