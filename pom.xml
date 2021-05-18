@@ -1,0 +1,177 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.wildfly.quickstarts</groupId>
+  <version>11.0.0-SNAPSHOT</version>
+  <artifactId>kitchensink-ear</artifactId>
+
+  <packaging>pom</packaging>
+  <name>kitchensink-ear</name>
+
+  <description>This kitchensink project demonstrates how to use JSF, CDI, JAX-RS, EJB, JPA, and Bean Validation in an application packaged as an EAR
+  </description>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <properties>
+    <qs.name.prefix>WildFly Quickstart:</qs.name.prefix>
+    <root.dir>${project.basedir}</root.dir>
+    <jboss.home.name>WILDFLY_HOME</jboss.home.name>
+    <product.name>WildFly</product.name>
+    <!-- A base list of dependency and plug-in version used in the various quick starts. -->
+    <version.wildfly.maven.plugin>1.2.0.Beta1</version.wildfly.maven.plugin>
+
+    <!-- other plug-in versions -->
+    <version.com.mycyla.license>3.0</version.com.mycyla.license>
+
+    <version.war.plugin>2.5</version.war.plugin>
+    <version.compiler.plugin>3.8.0</version.compiler.plugin>
+
+    <!-- Explicitly declaring the source encoding eliminates the following
+        message: [WARNING] Using platform encoding (UTF-8 actually) to copy
+        filtered resources, i.e. build is platform dependent! -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <version.spring.framework>4.3.9.RELEASE</version.spring.framework>
+    <!-- EAP component version management BOM -->
+    <version.server.bom>11.0.0.CR1</version.server.bom>
+
+    <version.jboss.spec.javaee.7.0>1.1.0.Final</version.jboss.spec.javaee.7.0>
+
+    <version.jaxws-tools-maven-plugin>1.2.0.Final</version.jaxws-tools-maven-plugin>
+
+    <!-- Other dependency versions -->
+    <version.ro.isdc.wro4j>1.7.9</version.ro.isdc.wro4j>
+    <httpclient.version>4.5.3</httpclient.version>
+    <version.org.apache.commons.commons-lang3>3.5</version.org.apache.commons.commons-lang3>
+    <version.h2db>1.4.193</version.h2db>
+    <version.org.wildfly.checkstyle-config>1.0.5.Final</version.org.wildfly.checkstyle-config>
+    <linkXRef>false</linkXRef>
+  </properties>
+
+  <modules>
+    <module>ejb</module>
+    <module>web</module>
+    <module>web2</module>
+    <module>ear</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- Define the version of the EJB jar so that we don't need
+          to repeat ourselves in every module -->
+      <dependency>
+        <groupId>org.wildfly.quickstarts</groupId>
+        <artifactId>kitchensink-ear-ejb</artifactId>
+        <version>${project.version}</version>
+        <type>ejb</type>
+      </dependency>
+
+      <!-- Define the version of the WAR so that we don't need to repeat
+          ourselves in every module -->
+      <dependency>
+        <groupId>org.wildfly.quickstarts</groupId>
+        <artifactId>kitchensink-ear-web</artifactId>
+        <version>${project.version}</version>
+        <type>war</type>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wildfly.quickstarts</groupId>
+        <artifactId>kitchensink-ear-web2</artifactId>
+        <version>${project.version}</version>
+        <type>war</type>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.5</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${version.org.apache.commons.commons-lang3}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>${httpclient.version}</version>
+      </dependency>
+
+      <!-- JBoss distributes a complete set of Java EE APIs including a Bill
+of Materials (BOM). A BOM specifies the versions of a "stack" (or a collection)
+of artifacts. We use this here so that we always get the correct versions
+of artifacts. Here we use the jboss-eap-javaee7-with-tools stack (you can
+read this as the JBoss stack of the Java EE APIs, with some extras tools
+for your project, such as Arquillian for testing) -->
+      <dependency>
+        <groupId>org.wildfly.bom</groupId>
+        <artifactId>wildfly-javaee7-with-tools</artifactId>
+        <version>${version.server.bom}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+
+      <!-- Define the version of the JBoss Java EE APIs we want to use -->
+      <!-- JBoss distributes a complete set of Java EE APIs including
+         a Bill of Materials (BOM). A BOM specifies the versions of a "stack" (or
+         a collection) of artifacts. We use this here so that we always get the correct
+         versions of artifacts. Here we use the jboss-javaee-7.0 stack (you can
+         read this as the JBoss stack of the Java EE APIs). You can actually
+         use this stack with any version of JBoss EAP that implements Java EE. -->
+      <dependency>
+        <groupId>org.jboss.spec</groupId>
+        <artifactId>jboss-javaee-7.0</artifactId>
+        <version>${version.jboss.spec.javaee.7.0}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+</project>

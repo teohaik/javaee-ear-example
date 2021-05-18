@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wildfly.quickstarts</groupId>
+        <artifactId>kitchensink-ear</artifactId>
+        <version>11.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>kitchensink-ear-ear</artifactId>
+    <packaging>ear</packaging>
+    <name>kitchensink-ear - ear</name>
+    <description>This kitchensink project demonstrates how to use JSF, CDI, JAX-RS, EJB, JPA, and Bean Validation in an application packaged as an EAR; this is the EAR POM file</description>
+
+    <properties>
+        <!-- Weblogic version -->
+        <weblogic.version>12.2.1-3-0</weblogic.version>
+
+        <!--Local Weblogic configuration-->
+        <weblogic.local.adminrurl>t3://localhost:7003</weblogic.local.adminrurl>
+        <weblogic.local.username>weblogic</weblogic.local.username>
+        <weblogic.local.password>weblogic1</weblogic.local.password>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>auto-deploy</id>
+            <build>
+
+                <plugins>
+                    <plugin>
+                        <groupId>com.oracle.weblogic</groupId>
+                        <artifactId>weblogic-maven-plugin</artifactId>
+                        <version>${weblogic.version}</version>
+                        <configuration>
+                            <user>${weblogic.local.username}</user>
+                            <password>${weblogic.local.password}</password>
+                            <name>${project.build.finalName}</name>
+                            <adminurl>${weblogic.local.adminrurl}</adminurl>
+                            <remote>true</remote>
+                            <targets>AdminServer</targets>
+                            <upload>true</upload>
+                            <source>${project.build.directory}/${project.build.finalName}.${project.packaging}
+                            </source>
+                            <verbose>true</verbose>
+                            <failOnError>false</failOnError>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>up</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>redeploy</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+
+            </build>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wildfly.quickstarts</groupId>
+            <artifactId>kitchensink-ear-ejb</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.21</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.21</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
+            <version>1.8.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-impl</artifactId>
+            <version>1.8.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.6</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Depend on the EJB module and WAR so that we can package them -->
+        <dependency>
+            <groupId>org.wildfly.quickstarts</groupId>
+            <artifactId>kitchensink-ear-web</artifactId>
+            <type>war</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wildfly.quickstarts</groupId>
+            <artifactId>kitchensink-ear-web2</artifactId>
+            <type>war</type>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <finalName>${project.parent.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <configuration>
+                    <!-- Use Java EE ear libraries as needed. Java EE ear libraries
+                        are in easy way to package any libraries needed in the ear, and automatically
+                        have any modules (EJB-JARs and WARs) use them -->
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <modules>
+                        <!-- Default context root of the web app is /kitchensink-ear-web.
+                        If a custom context root is needed, uncomment the following snippet to
+                        register our War as a web module and set the contextRoot property -->
+                        <!--
+                    <webModule>
+                        <groupId>org.wildfly.quickstarts</groupId>
+                        <artifactId>kitchensink-ear-web</artifactId>
+                        <contextRoot>/kitchensink-ear</contextRoot>
+                    </webModule>
+                    -->
+                    </modules>
+                    <fileNameMapping>no-version</fileNameMapping>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
