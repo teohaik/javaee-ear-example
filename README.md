@@ -20,6 +20,7 @@ in the kitchensink-ear-ejb/resources folder you can find an import.sql file with
 
 ## Build and Deploy the Quickstart
 
+0. unzip CommonLibsEar.zip and deploy it as Shared Library in Weblogic
 1. Make sure you have started the application server as described above.
 2. Open a command prompt and navigate to the root directory of this quickstart.
 3. Type this command to build the archive:
